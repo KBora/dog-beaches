@@ -22,13 +22,16 @@
 		<script>
 			var map;
 			function initMap() {
-			map = new google.maps.Map(document.getElementById('map'), {
-				center: {lat: -33.888066, lng: 151.205178},
-				zoom: 15			
-			});
+				map = new google.maps.Map(document.getElementById('map'), {
+					center: {lat: -33.888066, lng: 151.205178},
+					zoom: 15			
+				});
 			}
 		</script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGSvi6fok_KoX6Tw5C_UjPy3SsVm6ZQg&callback=initMap"
-    async defer></script>
+
+		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGSvi6fok_KoX6Tw5C_UjPy3SsVm6ZQg&callback=initMap&region=AU"
+		async defer></script>
 	</body>
+
+
 </html>
