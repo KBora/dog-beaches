@@ -31,13 +31,8 @@ var markerData =
     }
     ];
 
-// var Marker = function(data) {
-//     this.title = ko.observable(data.title);
-//     this.position = ko.observable(data.position);
-//     this.offLeash = ko.observable(data.offLeash);
-//     this.offLeashTimes = ko.observable(data.offLeashTimes);
-//     this.website = ko.observable(data.website);
-// };
+
+
 
 var ViewModel = function() {
 
@@ -45,35 +40,50 @@ var ViewModel = function() {
 
     this.beachList = ko.observableArray([]);
 
-    markerArray.forEach(function(googleMarker) {
-        googleMarker.matchesFilter = ko.observable(true);
-        self.beachList.push(googleMarker);
+    // Create markers and add to map
+    // TO DO: Should marker be in function / object?
+
+    markerData.forEach(function(markerItem) {
+
+        var marker = new google.maps.Marker({
+            position: markerItem.position,
+            map: map,
+            title: markerItem.title,
+            offLeash: markerItem.offLeash,
+            offLeashTimes: markerItem.offLeashTimes,
+            website: markerItem.website
+        });
+
+        marker.matchesFilter = ko.observable(true);
+        self.beachList.push(marker);
     });
+
+    // markerArray.forEach(function(googleMarker) {
+    //     // add an observable 'matchesFilter' element to the googleMarker 
+    //     // that is used by the filterBeaches function and beach-list id
+    //     googleMarker.matchesFilter = ko.observable(true);
+    //     self.beachList.push(googleMarker);
+    // });
 
 
     this.filterBeaches = function() {
-        console.log('filter Beaches');
-        var filterBy = document.getElementById('beach-filter-input').value;
+        var filterString = document.getElementById('beach-filter-input').value;
+
         self.beachList().forEach(function(googleMarker) {
-            // if title contains filterBy value, then show it, else hide it
-            console.log(googleMarker.title.toLowerCase());
-            if (googleMarker.title.toLowerCase().indexOf(filterBy) > -1 ) {
+            // if title contains filterString value, then show it, else hide it
+            if (googleMarker.title.toLowerCase().indexOf(filterString) > -1 ) {
+                // show the marker on the map
                 googleMarker.setMap(map);
                 googleMarker.matchesFilter(true);
             } else {
+                // hide the marker from the map
                 googleMarker.setMap(null);
                 googleMarker.matchesFilter(null);
             }
-
-            //googleMarker.visible = (googleMarker.title.toLowerCase().indexOf(filterBy) === -1 );
         });
+
     };
 
-    this.matchesFilter = function() {
-        console.log('hi');
-    }
-    // markerData.forEach(function(markerItem) {
-    //     self.markerList.push( new Marker(markerItem));
-    // });
+
 
 };

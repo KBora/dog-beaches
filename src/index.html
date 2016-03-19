@@ -20,7 +20,7 @@
 	<body>
 
 
-		<div id="list-view">
+		<div id="beach-list-view">
 			<h2>Dog Beaches</h2>
 			<input name="beach-filter-input" id="beach-filter-input" type="text">
 			<button name="beach-filter" id="beach-filter" data-bind="click: filterBeaches">Filter</button>
@@ -41,29 +41,11 @@
 			// Assuming this gets called after google maps API is loaded
 			var map;
 
-			// Global array of Google Markers
-			var markerArray = [];
-
 			function initMap() {
 				map = new google.maps.Map(document.getElementById('map'), {
 					center: {lat: -33.787019, lng: 151.248438},
 					zoom: 11		
 				});
-
-				// Create markers and add to map and markerArray
-				markerData.forEach(function(markerItem) {
-					var marker = new google.maps.Marker({
-						position: markerItem.position,
-						map: map,
-						title: markerItem.title,
-						offLeash: markerItem.offLeash,
-						offLeashTimes: markerItem.offLeashTimes,
-						website: markerItem.website
-					});
-
-					markerArray.push(marker);
-				});
-
 
 				// Run Knockout to handle list interactions
 				ko.applyBindings(new ViewModel);
