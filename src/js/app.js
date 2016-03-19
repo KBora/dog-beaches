@@ -46,6 +46,7 @@ var ViewModel = function() {
     this.beachList = ko.observableArray([]);
 
     markerArray.forEach(function(googleMarker) {
+        googleMarker.matchesFilter = ko.observable(true);
         self.beachList.push(googleMarker);
     });
 
@@ -58,14 +59,19 @@ var ViewModel = function() {
             console.log(googleMarker.title.toLowerCase());
             if (googleMarker.title.toLowerCase().indexOf(filterBy) > -1 ) {
                 googleMarker.setMap(map);
+                googleMarker.matchesFilter(true);
             } else {
                 googleMarker.setMap(null);
+                googleMarker.matchesFilter(null);
             }
 
             //googleMarker.visible = (googleMarker.title.toLowerCase().indexOf(filterBy) === -1 );
         });
     };
 
+    this.matchesFilter = function() {
+        console.log('hi');
+    }
     // markerData.forEach(function(markerItem) {
     //     self.markerList.push( new Marker(markerItem));
     // });
