@@ -1,4 +1,4 @@
-var markerData = 
+var dogBeachInitialData = 
     [{   title : 'Sirius Cove',
         position : {lat: -33.839502, lng: 151.237244},
         offLeash: true,
@@ -38,38 +38,38 @@ var ViewModel = function() {
 
     var self = this;
 
-    this.beachList = ko.observableArray([]);
+    this.dogBeaches = ko.observableArray([]);
 
     // Create markers and add to map
     // TO DO: Should marker be in function / object?
 
-    markerData.forEach(function(markerItem) {
+    dogBeachInitialData.forEach(function(beachItem) {
 
         var marker = new google.maps.Marker({
-            position: markerItem.position,
+            position: beachItem.position,
             map: map,
-            title: markerItem.title,
-            offLeash: markerItem.offLeash,
-            offLeashTimes: markerItem.offLeashTimes,
-            website: markerItem.website
+            title: beachItem.title,
+            offLeash: beachItem.offLeash,
+            offLeashTimes: beachItem.offLeashTimes,
+            website: beachItem.website
         });
 
         marker.matchesFilter = ko.observable(true);
-        self.beachList.push(marker);
+        self.dogBeaches.push(marker);
     });
 
     // markerArray.forEach(function(googleMarker) {
     //     // add an observable 'matchesFilter' element to the googleMarker 
     //     // that is used by the filterBeaches function and beach-list id
     //     googleMarker.matchesFilter = ko.observable(true);
-    //     self.beachList.push(googleMarker);
+    //     self.dogBeaches.push(googleMarker);
     // });
 
 
     this.filterBeaches = function() {
         var filterString = document.getElementById('beach-filter-input').value;
 
-        self.beachList().forEach(function(googleMarker) {
+        self.dogBeaches().forEach(function(googleMarker) {
             // if title contains filterString value, then show it, else hide it
             if (googleMarker.title.toLowerCase().indexOf(filterString) > -1 ) {
                 // show the marker on the map
