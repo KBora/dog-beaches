@@ -52,7 +52,7 @@ var DogBeachMarker = function(data, infoWindow) {
         // lookup flickr api based on title
         // per_page=3 returns up to 3 images
         var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8af4729ecdb6a93ec86ab928ffed273c&tags=' 
-        + self.googleMarker.title + '&per_page=3&format=json&jsoncallback=?';
+        + self.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
         $.ajax({
             url : flickURL,
             dataType : 'jsonp'
