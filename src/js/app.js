@@ -31,7 +31,25 @@ var dogBeachInitialData =
     }
     ];
 
+var DogBeachMarker = function(data) {
 
+    var marker = new google.maps.Marker({
+            position: data.position,
+            map: map,
+            title: data.title
+        });
+
+    this.googleMarker = marker;
+    this.matchesFilter = ko.observable(true);
+    this.offLeash = data.offLeash;
+    this.offLeashTimes =  data.offLeashTimes;
+    this.website = data.website;
+
+
+    this.displayMoreInfo = function() {
+        console.log(this.googleMarker.title);
+    }
+};
 
 
 var ViewModel = function() {
@@ -43,42 +61,24 @@ var ViewModel = function() {
     // Create markers and add to map
     // TO DO: Should marker be in function / object?
 
-    dogBeachInitialData.forEach(function(beachItem) {
-
-        var marker = new google.maps.Marker({
-            position: beachItem.position,
-            map: map,
-            title: beachItem.title,
-            offLeash: beachItem.offLeash,
-            offLeashTimes: beachItem.offLeashTimes,
-            website: beachItem.website
-        });
-
-        marker.matchesFilter = ko.observable(true);
-        self.dogBeaches.push(marker);
+    dogBeachInitialData.forEach(function(data) {
+        self.dogBeaches.push( new DogBeachMarker(data));
     });
-
-    // markerArray.forEach(function(googleMarker) {
-    //     // add an observable 'matchesFilter' element to the googleMarker 
-    //     // that is used by the filterBeaches function and beach-list id
-    //     googleMarker.matchesFilter = ko.observable(true);
-    //     self.dogBeaches.push(googleMarker);
-    // });
 
 
     this.filterBeaches = function() {
         var filterString = document.getElementById('beach-filter-input').value;
 
-        self.dogBeaches().forEach(function(googleMarker) {
+        self.dogBeaches().forEach(function(dogBeachMarker) {
             // if title contains filterString value, then show it, else hide it
-            if (googleMarker.title.toLowerCase().indexOf(filterString) > -1 ) {
+            if (dogBeachMarker.googleMarker.title.toLowerCase().indexOf(filterString) > -1 ) {
                 // show the marker on the map
-                googleMarker.setMap(map);
-                googleMarker.matchesFilter(true);
+                dogBeachMarker.googleMarker.setMap(map);
+                dogBeachMarker.matchesFilter(true);
             } else {
                 // hide the marker from the map
-                googleMarker.setMap(null);
-                googleMarker.matchesFilter(null);
+                dogBeachMarker.googleMarker.setMap(null);
+                dogBeachMarker.matchesFilter(null);
             }
         });
 

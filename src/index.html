@@ -28,7 +28,7 @@
 
 			<ul id="beach-list" data-bind="foreach: dogBeaches">
 				<!-- ko if: matchesFilter -->
-				<li data-bind="text: title"></li>
+				<li data-bind="text: googleMarker.title, click: displayMoreInfo"></li>
 				<!-- /ko -->
 			</ul>
 
