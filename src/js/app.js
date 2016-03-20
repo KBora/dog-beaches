@@ -37,7 +37,7 @@ var DogBeachMarker = function(data, infoWindow) {
     var marker = new google.maps.Marker({
             position: data.position,
             map: map,
-            title: data.title,        
+            title: data.title       
         });
 
  
