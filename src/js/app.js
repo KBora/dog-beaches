@@ -5,7 +5,7 @@ var dogBeachInitialData =
         offLeashTimes : 'All day Monday to Friday, and before 9am and after 4pm on Saturdays, Sundays and Public Holidays ',
         website : 'http://www.mosman.nsw.gov.au/residents/Pets/where-to-walk-your-dog/'
     },
-    {   title : 'Clifton Gardens jetty',
+    {   title : 'Clifton Gardens',
         position : {lat: -33.838516, lng: 151.254275},
         offLeash : true,
         offLeashTimes: 'Before 9am and after 4pm weekdays during winter. Before 9am and after 6pm weekdays during daylight savings summer months (Oct – Mar)',
@@ -48,20 +48,33 @@ var DogBeachMarker = function(data) {
 
     this.displayMoreInfo = function() {
         // lookup flickr api based on title
-        var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8af4729ecdb6a93ec86ab928ffed273c&tags=rowland+reserve&per_page=5&format=json&jsoncallback=?';
+        // per_page=3 returns up to 3 images
+        var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8af4729ecdb6a93ec86ab928ffed273c&tags=' 
+        + this.googleMarker.title + '&per_page=3&format=json&jsoncallback=?';
         $.ajax({
             url : flickURL,
             dataType : 'jsonp'
         }).done(function(data) {
-            console.log('done' + data);
-            debugger;
+            // loop through response and generate URLs for them  an
+            displayFlickrImages(data);
         }).fail(function() {
-            console.log('fail flickr api');
-            debugger;
+            alert('fail flickr api');
         })
 
     };
 
+    var displayFlickrImages = function(data) {
+        var photoList = data.photos.photo;
+        $('#flickr-images').html('');
+        for (var i = 0; i < photoList.length; i++) {
+            // construct URL as per https://www.flickr.com/services/api/misc.urls.html 
+            var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
+            + photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
+
+
+            $('#flickr-images').append('<img src="' + imgURL + '" />');
+        }
+    };
 
 };
 
