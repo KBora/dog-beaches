@@ -51,7 +51,8 @@ var DogBeachMarker = function(data, infoWindow) {
     this.clickMarker = function() {
         // lookup flickr api based on title
         // per_page=3 returns up to 3 images
-        var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8af4729ecdb6a93ec86ab928ffed273c&tags=' 
+      //  var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8af4729ecdb6a93ec86ab928ffed273c&tags=' 
+        var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
         + self.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
         $.ajax({
             url : flickURL,
