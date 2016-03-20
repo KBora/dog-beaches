@@ -33,12 +33,14 @@ var dogBeachInitialData =
 
 var DogBeachMarker = function(data) {
 
+    var self = this;
     var marker = new google.maps.Marker({
             position: data.position,
             map: map,
-            title: data.title
+            title: data.title,        
         });
 
+ 
     this.googleMarker = marker;
     this.matchesFilter = ko.observable(true);
     this.offLeash = data.offLeash;
@@ -46,24 +48,29 @@ var DogBeachMarker = function(data) {
     this.website = data.website;
 
 
-    this.displayMoreInfo = function() {
+    this.clickMarker = function() {
         // lookup flickr api based on title
         // per_page=3 returns up to 3 images
         var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8af4729ecdb6a93ec86ab928ffed273c&tags=' 
-        + this.googleMarker.title + '&per_page=3&format=json&jsoncallback=?';
+        + self.googleMarker.title + '&per_page=3&format=json&jsoncallback=?';
         $.ajax({
             url : flickURL,
             dataType : 'jsonp'
         }).done(function(data) {
             // loop through response and generate URLs for them  an
-            displayFlickrImages(data);
+            animateMarker();
+            loadFlickrImages(data);
+            loadInfoWindow();
         }).fail(function() {
             alert('fail flickr api');
         })
 
     };
 
-    var displayFlickrImages = function(data) {
+    marker.addListener('click', this.clickMarker);
+
+
+    var loadFlickrImages = function(data) {
         var photoList = data.photos.photo;
         $('#flickr-images').html('');
         for (var i = 0; i < photoList.length; i++) {
@@ -76,6 +83,17 @@ var DogBeachMarker = function(data) {
         }
     };
 
+    function animateMarker() {
+        // I am assuming referencing 'marker' in this function is a form of closure?
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+        window.setTimeout(function() {
+            marker.setAnimation(null);
+        }, 3500);
+    };
+
+    function loadInfoWindow() {
+        console.log('load info window');
+    }
 };
 
 
