@@ -31,7 +31,7 @@ var dogBeachInitialData =
     }
     ];
 
-var DogBeachMarker = function(data) {
+var DogBeachMarker = function(data, infoWindow) {
 
     var self = this;
     var marker = new google.maps.Marker({
@@ -59,8 +59,8 @@ var DogBeachMarker = function(data) {
         }).done(function(data) {
             // loop through response and generate URLs for them  an
             animateMarker();
-            loadFlickrImages(data);
-            loadInfoWindow();
+            // loadFlickrImages(data);
+            openInfoWindow(data);
         }).fail(function() {
             alert('fail flickr api');
         })
@@ -78,7 +78,6 @@ var DogBeachMarker = function(data) {
             var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
             + photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
 
-
             $('#flickr-images').append('<img src="' + imgURL + '" />');
         }
     };
@@ -91,11 +90,37 @@ var DogBeachMarker = function(data) {
         }, 3500);
     };
 
-    function loadInfoWindow() {
-        console.log('load info window');
+    function openInfoWindow(data) {
+        infoWindow.setContent(generateInfoWindowHTML(data));
+        infoWindow.open(map, marker);
+    }
+
+    // Generates HTML for InfoWindow
+    // Not sure if there is a way to do this via HTML and knockout observables??
+    function generateInfoWindowHTML(data) {
+        var contentHTML = '<h3>' + marker.title + '</h3>';
+        contentHTML = contentHTML + '<div>Off Leash Times</div>';
+        contentHTML = contentHTML + '<div>' + self.offLeashTimes + '</div>';
+        var photoList = data.photos.photo;
+        for (var i = 0; i < photoList.length; i++) {
+            // construct URL as per https://www.flickr.com/services/api/misc.urls.html 
+            var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
+            + photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
+            contentHTML = contentHTML + '<img src="' + imgURL + '">';
+        }
+        return contentHTML;
+
     }
 };
 
+
+// var InfoWindow = function() {
+//     var infoWindow = new google.maps.InfoWindow({
+//         content : 'default info window text'
+//     });
+//     this.infoWindow = infoWindow;
+
+// };
 
 var ViewModel = function() {
 
@@ -104,9 +129,16 @@ var ViewModel = function() {
     // Declare array that will hold all the markers
     this.dogBeaches = ko.observableArray([]);
 
+
+    // Create one infoWindow that will be passed to each DogBeachMarker
+    // Not sure if this is the best pattern
+    var infoWindow = new google.maps.InfoWindow({
+        content : 'default info window text'
+    });
+
     // Create markers from initial data and add to array
     dogBeachInitialData.forEach(function(data) {
-        self.dogBeaches.push( new DogBeachMarker(data));
+        self.dogBeaches.push( new DogBeachMarker(data, infoWindow));
     });
 
 
