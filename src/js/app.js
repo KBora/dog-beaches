@@ -47,8 +47,22 @@ var DogBeachMarker = function(data) {
 
 
     this.displayMoreInfo = function() {
-        console.log(this.googleMarker.title);
-    }
+        // lookup flickr api based on title
+        var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8af4729ecdb6a93ec86ab928ffed273c&tags=rowland+reserve&per_page=5&format=json&jsoncallback=?';
+        $.ajax({
+            url : flickURL,
+            dataType : 'jsonp'
+        }).done(function(data) {
+            console.log('done' + data);
+            debugger;
+        }).fail(function() {
+            console.log('fail flickr api');
+            debugger;
+        })
+
+    };
+
+
 };
 
 
@@ -56,16 +70,16 @@ var ViewModel = function() {
 
     var self = this;
 
+    // Declare array that will hold all the markers
     this.dogBeaches = ko.observableArray([]);
 
-    // Create markers and add to map
-    // TO DO: Should marker be in function / object?
-
+    // Create markers from initial data and add to array
     dogBeachInitialData.forEach(function(data) {
         self.dogBeaches.push( new DogBeachMarker(data));
     });
 
 
+    // Filter the markers by the value in the input field
     this.filterBeaches = function() {
         var filterString = document.getElementById('beach-filter-input').value;
 
@@ -74,10 +88,12 @@ var ViewModel = function() {
             if (dogBeachMarker.googleMarker.title.toLowerCase().indexOf(filterString) > -1 ) {
                 // show the marker on the map
                 dogBeachMarker.googleMarker.setMap(map);
+                // show the marker in the list
                 dogBeachMarker.matchesFilter(true);
             } else {
                 // hide the marker from the map
                 dogBeachMarker.googleMarker.setMap(null);
+                // hide the marker from the list
                 dogBeachMarker.matchesFilter(null);
             }
         });
