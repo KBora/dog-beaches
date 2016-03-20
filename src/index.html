@@ -10,40 +10,122 @@
 				height: 100%;
 				margin: 0;
 				padding: 0;
+				font-family: sans-serif;
+				font-size: 0.85em;
 			}
+
 			#map {
 				height: 100%;
 			}
+
+			.nav-container {
+				width: 250px;
+				position: absolute;
+				z-index: 3;
+				top: 0;
+				right: 0;
+				padding: 0;
+				height: 100%;
+				background-color: rgba(255, 255, 255, 0.95);
+			}
+
+			.map-container {
+				width: 100%;
+				height: 100%;
+			}
+
+			.nav-container .nav-header {
+				
+				padding: 0 10px 0 10px;
+			}
+
+			.nav-header input {
+				width: 160px;
+			}
+
+			input.rounded {
+				border: 1px solid #ccc;
+				-moz-border-radius: 3px;
+				-webkit-border-radius: 3px;
+				border-radius: 3px;
+				-moz-box-shadow: 1px 1px 2px #ccc;
+				-webkit-box-shadow: 1px 1px 2px #ccc;
+				box-shadow: 1px 1px 2px #ccc;
+				font-size: 1em;
+				padding: 6px 6px;
+				outline: 0;
+				-webkit-appearance: none;
+			}
+			input.rounded:focus {
+				border-color: #B3D1FF;
+			}
+
+			.nav-header button {
+				display: inline-block;
+				font-family: inherit;
+				outline: 0 !important;
+				border: 1px solid #D4D4D4 !important;
+				border-radius: 2px;
+				color: #444;
+				background: -webkit-linear-gradient(top, #F4F4F2, #EDEDEB);
+				background: linear-gradient(to bottom, #F4F4F2, #EDEDEB);
+				box-shadow: inset 0 1px 0 #FDFDFC;
+				white-space: nowrap;
+				padding: 5px 8px !important;
+				line-height: 1.4 !important;
+				position: relative;
+			}
+
+			.nav-container h3 {
+				color: #414141;
+				font-weight: 100;
+				font-size: 1.3em;
+				text-transform: capitalize;
+			}
+
+			.nav-container ul {
+				list-style-type: none;
+				list-style-position: outside;
+				padding: 0;
+			}
+
+			.nav-container li {
+				cursor: pointer;
+				padding: 10px;
+				border-bottom: 1px solid #eee;
+				background: white;
+			}
+
+			.nav-container li:first-child {
+				border-top: 1px solid #eee;
+			}
+
+			.nav-container li:hover {
+				background-color: #eee;
+			}
+	
 		</style>
 	</head>
 	
 	<body>
 
+		<div class="map-container">
+			<div id="map"></div>
+		</div>
 
-		<div id="beach-list-view">
-			<h2>Dog Beaches</h2>
-			<input name="beach-filter-input" id="beach-filter-input" type="text">
-			<button name="beach-filter" id="beach-filter" data-bind="click: filterBeaches">Filter</button>
-
-
+		<div class="nav-container">
+			<div class="nav-header">
+				<h3>Dog Beaches in Sydney</h3>
+				<input name="beach-filter-input" id="beach-filter-input" type="text" class="rounded">
+				<button name="beach-filter" id="beach-filter" data-bind="click: filterBeaches">Filter</button>
+			</div>
 			<ul id="beach-list" data-bind="foreach: dogBeaches">
 				<!-- ko if: matchesFilter -->
 				<li data-bind="text: googleMarker.title, click: clickMarker"></li>
 				<!-- /ko -->
 			</ul>
-
-			<div id="flickr-images">
-			</div>
-
 		</div>
-
-
-		<div id="info-window">
-			<div class="info-window-heading" ></div>
-		</div>
-
 		
-		<div id="map"></div>
 
 		<script>
 			// Assuming this gets called after google maps API is loaded
@@ -51,7 +133,8 @@
 
 			function initMap() {
 				map = new google.maps.Map(document.getElementById('map'), {
-					center: {lat: -33.787019, lng: 151.248438},
+					//center: {lat: -33.787019, lng: 151.248438},
+					center: {lat:-33.804618, lng: 151.328453},
 					zoom: 11		
 				});
 
