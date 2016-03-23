@@ -52,10 +52,10 @@ var ViewModel = function() {
 
 	var self = this;
 
-  // Declare array that will hold all the markers
+	// Declare array that will hold all the markers
 	self.dogBeaches = ko.observableArray([]);
 
-  // Create one infoWindow that will display content and images for each marker
+	// Create one infoWindow that will display content and images for each marker
 	var infoWindow = new google.maps.InfoWindow({
 		content : 'default info window text'
 	});
