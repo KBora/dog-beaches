@@ -64,6 +64,8 @@ var ViewModel = function() {
 	dogBeachInitialData.forEach(function(data) {
 
 		var dogBeachMarker = new DogBeachMarker(data);
+
+		// Using the IIFE pattern here (I think)
 		dogBeachMarker.clickMarker = returnClickMarkerFunction(dogBeachMarker);
 
 		// Assign event listeners to marker
