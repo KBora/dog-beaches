@@ -31,7 +31,7 @@ var dogBeachInitialData =
     }
     ];
 
-var DogBeachMarker = function(data, infoWindow) {
+var DogBeachMarker = function(data) {
 
 	var self = this;
 
@@ -47,50 +47,15 @@ var DogBeachMarker = function(data, infoWindow) {
 
 };
 
-/*
-    
-
-
-    function animateMarker() {
-        // I am assuming referencing 'marker' in this function is a form of closure?
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        window.setTimeout(function() {
-            marker.setAnimation(null);
-        }, 3500);
-    };
-
-    function openInfoWindow(data) {
-        infoWindow.setContent(generateInfoWindowHTML(data));
-        infoWindow.open(map, marker);
-    }
-
-    // Generates HTML for InfoWindow
-    // Not sure if there is a way to do this via HTML and knockout observables??
-    function generateInfoWindowHTML(data) {
-        var contentHTML = '<h3>' + marker.title + '</h3>';
-        contentHTML = contentHTML + '<div>Off Leash Times</div>';
-        contentHTML = contentHTML + '<div>' + self.offLeashTimes + '</div>';
-        var photoList = data.photos.photo;
-        for (var i = 0; i < photoList.length; i++) {
-            // construct URL as per https://www.flickr.com/services/api/misc.urls.html 
-            var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
-            + photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
-            contentHTML = contentHTML + '<img src="' + imgURL + '">';
-        }
-        return contentHTML;
-
-    }
-   */
 
 var ViewModel = function() {
 
-  var self = this;
+	var self = this;
 
   // Declare array that will hold all the markers
-  self.dogBeaches = ko.observableArray([]);
+	self.dogBeaches = ko.observableArray([]);
 
-
-  // Create one infoWindow that will be passed to each DogBeachMarker
+  // Create one infoWindow that will display content and images for each marker
 	var infoWindow = new google.maps.InfoWindow({
 		content : 'default info window text'
 	});
@@ -98,8 +63,7 @@ var ViewModel = function() {
 	// Create markers from initial data and add to array
 	dogBeachInitialData.forEach(function(data) {
 
-		var dogBeachMarker = new DogBeachMarker(data, infoWindow);
-
+		var dogBeachMarker = new DogBeachMarker(data);
 		dogBeachMarker.clickMarker = returnClickMarkerFunction(dogBeachMarker);
 
 		// Assign event listeners to marker
@@ -107,13 +71,11 @@ var ViewModel = function() {
 
 		// Add DogBeachMarker object to the array
 		self.dogBeaches.push( dogBeachMarker );
-
 		
 	});
 
 
-	// Function called when dog beach or marker is clicked
-	// It animates the marker and loads the infoWindow
+	// Returns a function that will animate the marker and load the infoWindow
 	// dogBeachMarker is in the closure (Reviewer: please check if this is a correct statement)
 	function returnClickMarkerFunction(dogBeachMarker) {
 
@@ -140,7 +102,8 @@ var ViewModel = function() {
 
 	}
 
-
+	// Generate HTML that is displayed in the infoWindow
+	// Consists of title, off leash info and picture
 	function generateInfoWindowHTML(flickrData, dogBeachMarker) {
 
 		var contentHTML = '<h3>' + dogBeachMarker.googleMarker.title + '</h3>';
