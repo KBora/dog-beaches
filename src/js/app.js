@@ -133,6 +133,28 @@ var ViewModel = function() {
 
 	}
 
+	// Declare query variable to hold contents of search bar 
+	self.query = ko.observable('');
+
+	// Search function
+	self.search = function(searchValue) {		
+		self.dogBeaches().forEach(function(dogBeachMarker) {
+			// if title contains filterString value, then show it, else hide it
+			if (dogBeachMarker.googleMarker.title.toLowerCase().indexOf(searchValue) > -1 ) {
+				// show the marker on the map
+				dogBeachMarker.googleMarker.setMap(map);
+				// show the marker in the list
+				dogBeachMarker.matchesFilter(true);
+			} else {
+				// hide the marker from the map
+				dogBeachMarker.googleMarker.setMap(null);
+				// hide the marker from the list
+				dogBeachMarker.matchesFilter(null);
+			}
+
+		});
+	};
+
 	// Filter the markers by the value in the input field
 	self.filterBeaches = function() {
 
@@ -155,6 +177,9 @@ var ViewModel = function() {
 		});
 
 	};
+
+	// Subscribe to updates on query to search
+	self.query.subscribe(self.search);
 
 
 

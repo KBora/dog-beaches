@@ -116,8 +116,7 @@
 		<div class="nav-container">
 			<div class="nav-header">
 				<h3>Dog Beaches in Sydney</h3>
-				<input name="beach-filter-input" id="beach-filter-input" type="text" class="rounded">
-				<button name="beach-filter" id="beach-filter" data-bind="click: filterBeaches">Filter</button>
+				<input name="beach-filter-input" id="beach-filter-input" class="rounded" type="search"  data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
 			</div>
 			<ul id="beach-list" data-bind="foreach: dogBeaches">
 				<!-- ko if: matchesFilter -->
@@ -138,8 +137,10 @@
 					zoom: 11		
 				});
 
-				// Run Knockout to handle list interactions
+				// Run Knockout to handle list interactions				
 				ko.applyBindings(new ViewModel);
+
+				
 			}
 		</script>
 
