@@ -59,7 +59,7 @@ var ViewModel = function() {
 	// Create one infoWindow that will display content and images for each marker
 	var infoWindow = new google.maps.InfoWindow({
 		content : 'default info window text',
-        maxWidth : 350
+		maxWidth : 350
 	});
 
 	// Create markers from initial data and add to array
@@ -84,6 +84,8 @@ var ViewModel = function() {
 	function returnClickMarkerFunction(dogBeachMarker) {
 
 		return function() {
+
+
             // Search flickr and grab an image
 			var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
 		+ dogBeachMarker.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
@@ -92,6 +94,11 @@ var ViewModel = function() {
 				url : flickURL,
 				dataType : 'jsonp'
 			}).done(function(data) {
+
+			// Hide the list if visible
+			if (self.listVisible()) {
+				self.toggleList();
+			}
 
 				// Animate marker by bouncing it
 				animateMarker(dogBeachMarker.googleMarker);
@@ -114,8 +121,8 @@ var ViewModel = function() {
 		var contentHTML = '<h3>' + dogBeachMarker.googleMarker.title + '</h3>';
 		contentHTML = contentHTML + '<div class="infoHeading">Off Leash Times</div>';
 		contentHTML = contentHTML + '<div class="off-leash-description">' + dogBeachMarker.offLeashTimes + '</div>';
-        contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div>';
-        var photoList = flickrData.photos.photo;
+			contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div>';
+			var photoList = flickrData.photos.photo;
 		for (var i = 0; i < photoList.length; i++) {
 			// construct URL as per https://www.flickr.com/services/api/misc.urls.html 
 			var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
@@ -123,11 +130,12 @@ var ViewModel = function() {
 			contentHTML = contentHTML + '<img src="' + imgURL + '" class="info-window-image">' ;
 		}
 
-        var url = '<div class="infoHeading">Council website</div><a href="' + dogBeachMarker.website + '">' + dogBeachMarker.website + '</a>';
-        
+		var url = '<div class="infoHeading">Council website</div><a href="' + dogBeachMarker.website + '">' + dogBeachMarker.website + '</a>';
+
 		return contentHTML + url;
 
 	}
+
 
 
 	// Animate marker
@@ -143,36 +151,37 @@ var ViewModel = function() {
 	// Declare query variable to hold contents of search bar 
 	self.query = ko.observable('');
 
-     // Filtered dog beaches array - uses a computed observable that looks the 'query' value
-    self.dogBeachesFiltered = ko.computed(function() {
-        // grab the query value
-        var filter = self.query().toLowerCase();
+	// Filtered dog beaches array - uses a computed observable that looks the 'query' value
+	self.dogBeachesFiltered = ko.computed(function() {
+		// grab the query value
+		var filter = self.query().toLowerCase();
 
-        if (!filter) {
-            // query is blank, return all the dogBeaches
-            return this.dogBeaches();
-        } else {
-            // query equals something, filter the dogBeaches using the arrayFilter utility function
-            return ko.utils.arrayFilter(this.dogBeaches(), function(item) {
+		if (!filter) {
+		// query is blank, return all the dogBeaches
+			return this.dogBeaches();
+		} else {
+			// query equals something, filter the dogBeaches using the arrayFilter utility function
+			return ko.utils.arrayFilter(this.dogBeaches(), function(item) {
 
-                // if filter string is in the dogBeach title, then add to filtered array
-                return item.googleMarker.title.toLowerCase().indexOf(filter) !== -1;
-               
-            });
-        }
-    }, self);
+				// if filter string is in the dogBeach title, then add to filtered array
+				return item.googleMarker.title.toLowerCase().indexOf(filter) !== -1;
+			
+			});
 
-    // Declare observable to hold status of list view
-    self.listVisible = ko.observable(false);
-    
-    
-    self.listToggleButtonText = ko.computed( function() {
-        return self.listVisible() ? 'HIDE LIST' : 'SHOW LIST';
-    }, self);
+		}
+	}, self);
 
-    self.toggleList = function() {
-        self.listVisible(!self.listVisible());
-    };
+	// Declare observable to hold status of list view
+	self.listVisible = ko.observable(false);
 
-    
+
+	self.listToggleButtonText = ko.computed( function() {
+		return self.listVisible() ? 'HIDE LIST' : 'SHOW LIST';
+	}, self);
+
+	self.toggleList = function() {
+		self.listVisible(!self.listVisible());
+	};
+
+
 };
