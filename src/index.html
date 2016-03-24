@@ -118,10 +118,8 @@
 				<h3>Dog Beaches in Sydney</h3>
 				<input name="beach-filter-input" id="beach-filter-input" class="rounded" type="search"  data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
 			</div>
-			<ul id="beach-list" data-bind="foreach: dogBeaches">
-				<!-- ko if: matchesFilter -->
+			<ul id="beach-list" data-bind="foreach: dogBeachesFiltered">
 				<li data-bind="text: googleMarker.title, click: clickMarker"></li>
-				<!-- /ko -->
 			</ul>
 		</div>
 		

@@ -136,51 +136,23 @@ var ViewModel = function() {
 	// Declare query variable to hold contents of search bar 
 	self.query = ko.observable('');
 
-	// Search function
-	self.search = function(searchValue) {		
-		self.dogBeaches().forEach(function(dogBeachMarker) {
-			// if title contains filterString value, then show it, else hide it
-			if (dogBeachMarker.googleMarker.title.toLowerCase().indexOf(searchValue) > -1 ) {
-				// show the marker on the map
-				dogBeachMarker.googleMarker.setMap(map);
-				// show the marker in the list
-				dogBeachMarker.matchesFilter(true);
-			} else {
-				// hide the marker from the map
-				dogBeachMarker.googleMarker.setMap(null);
-				// hide the marker from the list
-				dogBeachMarker.matchesFilter(null);
-			}
+     // Filtered dog beaches array - uses a computed observable that looks the 'query' value
+    self.dogBeachesFiltered = ko.computed(function() {
+        // grab the query value
+        var filter = self.query().toLowerCase();
 
-		});
-	};
+        if (!filter) {
+            // query is blank, return all the dogBeaches
+            return this.dogBeaches();
+        } else {
+            // query equals something, filter the dogBeaches using the arrayFilter utility function
+            return ko.utils.arrayFilter(this.dogBeaches(), function(item) {
 
-	// Filter the markers by the value in the input field
-	self.filterBeaches = function() {
-
-		var filterString = document.getElementById('beach-filter-input').value;
-
-		self.dogBeaches().forEach(function(dogBeachMarker) {
-			// if title contains filterString value, then show it, else hide it
-			if (dogBeachMarker.googleMarker.title.toLowerCase().indexOf(filterString) > -1 ) {
-				// show the marker on the map
-				dogBeachMarker.googleMarker.setMap(map);
-				// show the marker in the list
-				dogBeachMarker.matchesFilter(true);
-			} else {
-				// hide the marker from the map
-				dogBeachMarker.googleMarker.setMap(null);
-				// hide the marker from the list
-				dogBeachMarker.matchesFilter(null);
-			}
-
-		});
-
-	};
-
-	// Subscribe to updates on query to search
-	self.query.subscribe(self.search);
-
-
+                // if filter string is in the dogBeach title, then add to filtered array
+                return item.googleMarker.title.toLowerCase().indexOf(filter) !== -1;
+               
+            });
+        }
+    }, self);
 
 };
