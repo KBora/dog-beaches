@@ -66,20 +66,9 @@ html, body {
 	transition: transform 0.45s ease-in;
 }
 
-.nav-container.open {
+.nav-container .open {
 	transform: translate(0,0);
 	transition: transform 0.45s ease-out;
-}
-
-.nav-container.desktop {
-	width: 250px;
-	position: absolute;
-	z-index: 3;
-	top: 0;
-	right: 0;
-	padding: 0;
-	height: 100%;
-	background-color: rgba(255, 255, 255, 0.95);
 }
 
 .nav-search {
