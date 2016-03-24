@@ -10,7 +10,7 @@
 				height: 100%;
 				margin: 0;
 				padding: 0;
-				font-family: sans-serif;
+				font-family: 'Helvetica Neue', sans-serif;
 				font-size: 0.85em;
 			}
 
@@ -18,7 +18,51 @@
 				height: 100%;
 			}
 
-			.nav-container {
+			.nav-header {
+				background-color: rgba(0, 63, 156, 0.95);
+				width: 100%;
+				position: absolute;
+				z-index: 3;
+				top: 0;
+				right: 0;
+				padding: 0;
+				height: 40px;
+				display: flex;
+			}
+
+			.nav-heading  {
+				flex-grow: 1;
+			}
+
+			.nav-heading h1 {
+
+				font-size: 1.5em;
+				color: white;
+				font-weight: 100;
+				padding: 10px 10px 5px;
+				margin: 0;
+			}
+
+
+			.nav-toggle {
+				text-align: right;
+				flex-grow: 1;
+				padding: 10px;
+
+			}
+			.nav-container  {
+				width: 100%;
+				position: absolute;
+				z-index: 3;
+				top: 40px;
+				right: 0;
+				padding: 0;
+				height: 100%;
+				background-color: rgba(255, 255, 255, 0.95);
+			}
+
+			
+			.nav-container.desktop{
 				width: 250px;
 				position: absolute;
 				z-index: 3;
@@ -34,12 +78,8 @@
 				height: 100%;
 			}
 
-			.nav-container .nav-header {
-				
-				padding: 0 10px 0 10px;
-			}
 
-			.nav-header input {
+			.nav-search input {
 				width: 160px;
 			}
 
@@ -60,28 +100,8 @@
 				border-color: #B3D1FF;
 			}
 
-			.nav-header button {
-				display: inline-block;
-				font-family: inherit;
-				outline: 0 !important;
-				border: 1px solid #D4D4D4 !important;
-				border-radius: 2px;
-				color: #444;
-				background: -webkit-linear-gradient(top, #F4F4F2, #EDEDEB);
-				background: linear-gradient(to bottom, #F4F4F2, #EDEDEB);
-				box-shadow: inset 0 1px 0 #FDFDFC;
-				white-space: nowrap;
-				padding: 5px 8px !important;
-				line-height: 1.4 !important;
-				position: relative;
-			}
 
-			.nav-container h3 {
-				color: #414141;
-				font-weight: 100;
-				font-size: 1.3em;
-				text-transform: capitalize;
-			}
+
 
 			.nav-container ul {
 				list-style-type: none;
@@ -112,6 +132,7 @@
 				margin-top: 5px;
 			}
 
+			
 	
 		</style>
 	</head>
@@ -122,14 +143,21 @@
 			<div id="map"></div>
 		</div>
 
+
+		<div class="nav-header">
+			<div class="nav-heading"><h1>Dog Beaches in Sydney</h1></div>
+			<div class="nav-toggle">X</div>
+		</div>
 		<div class="nav-container">
-			<div class="nav-header">
-				<h3>Dog Beaches in Sydney</h3>
+			
+			<div class="nav-search">
 				<input name="beach-filter-input" id="beach-filter-input" class="rounded" type="search"  data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
 			</div>
-			<ul id="beach-list" data-bind="foreach: dogBeachesFiltered">
-				<li data-bind="text: googleMarker.title, click: clickMarker"></li>
-			</ul>
+			<div class="nav-list">
+				<ul id="beach-list" data-bind="foreach: dogBeachesFiltered">
+					<li data-bind="text: googleMarker.title, click: clickMarker"></li>
+				</ul>
+			</div>
 		</div>
 		
 
