@@ -31,139 +31,131 @@ var dogBeachInitialData =
     }
     ];
 
-var DogBeachMarker = function(data, infoWindow) {
 
-    var self = this;
-    var marker = new google.maps.Marker({
-            position: data.position,
-            map: map,
-            title: data.title       
-        });
+var DogBeachMarker = function(data) {
 
- 
-    this.googleMarker = marker;
-    this.matchesFilter = ko.observable(true);
-    this.offLeash = data.offLeash;
-    this.offLeashTimes =  data.offLeashTimes;
-    this.website = data.website;
+	var self = this;
 
+	self.googleMarker = new google.maps.Marker({
+		position: data.position,
+		map: map,
+		title: data.title      
+	});
+	self.matchesFilter = ko.observable(true);
+	self.offLeash = data.offLeash;
+	self.offLeashTimes =  data.offLeashTimes;
+	self.website = data.website;
 
-    this.clickMarker = function() {
-        // lookup flickr api based on title
-        // per_page=3 returns up to 3 images
-      //  var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=8af4729ecdb6a93ec86ab928ffed273c&tags=' 
-        var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
-        + self.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
-        $.ajax({
-            url : flickURL,
-            dataType : 'jsonp'
-        }).done(function(data) {
-            // loop through response and generate URLs for them  an
-            animateMarker();
-            // loadFlickrImages(data);
-            openInfoWindow(data);
-        }).fail(function() {
-            alert('fail flickr api');
-        })
-
-    };
-
-    marker.addListener('click', this.clickMarker);
-
-
-    var loadFlickrImages = function(data) {
-        var photoList = data.photos.photo;
-        $('#flickr-images').html('');
-        for (var i = 0; i < photoList.length; i++) {
-            // construct URL as per https://www.flickr.com/services/api/misc.urls.html 
-            var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
-            + photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
-
-            $('#flickr-images').append('<img src="' + imgURL + '" />');
-        }
-    };
-
-    function animateMarker() {
-        // I am assuming referencing 'marker' in this function is a form of closure?
-        marker.setAnimation(google.maps.Animation.BOUNCE);
-        window.setTimeout(function() {
-            marker.setAnimation(null);
-        }, 3500);
-    };
-
-    function openInfoWindow(data) {
-        infoWindow.setContent(generateInfoWindowHTML(data));
-        infoWindow.open(map, marker);
-    }
-
-    // Generates HTML for InfoWindow
-    // Not sure if there is a way to do this via HTML and knockout observables??
-    function generateInfoWindowHTML(data) {
-        var contentHTML = '<h3>' + marker.title + '</h3>';
-        contentHTML = contentHTML + '<div>Off Leash Times</div>';
-        contentHTML = contentHTML + '<div>' + self.offLeashTimes + '</div>';
-        var photoList = data.photos.photo;
-        for (var i = 0; i < photoList.length; i++) {
-            // construct URL as per https://www.flickr.com/services/api/misc.urls.html 
-            var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
-            + photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
-            contentHTML = contentHTML + '<img src="' + imgURL + '">';
-        }
-        return contentHTML;
-
-    }
 };
 
 
-// var InfoWindow = function() {
-//     var infoWindow = new google.maps.InfoWindow({
-//         content : 'default info window text'
-//     });
-//     this.infoWindow = infoWindow;
-
-// };
-
 var ViewModel = function() {
 
-    var self = this;
+	var self = this;
 
-    // Declare array that will hold all the markers
-    this.dogBeaches = ko.observableArray([]);
+	// Declare array that will hold all the markers
+	self.dogBeaches = ko.observableArray([]);
 
+	// Create one infoWindow that will display content and images for each marker
+	var infoWindow = new google.maps.InfoWindow({
+		content : 'default info window text',
+        maxWidth : 350
+	});
 
-    // Create one infoWindow that will be passed to each DogBeachMarker
-    // Not sure if this is the best pattern
-    var infoWindow = new google.maps.InfoWindow({
-        content : 'default info window text'
-    });
+	// Create markers from initial data and add to array
+	dogBeachInitialData.forEach(function(data) {
 
-    // Create markers from initial data and add to array
-    dogBeachInitialData.forEach(function(data) {
-        self.dogBeaches.push( new DogBeachMarker(data, infoWindow));
-    });
+		var dogBeachMarker = new DogBeachMarker(data);
 
+		// Using the IIFE pattern here (I think)
+		dogBeachMarker.clickMarker = returnClickMarkerFunction(dogBeachMarker);
 
-    // Filter the markers by the value in the input field
-    this.filterBeaches = function() {
-        var filterString = document.getElementById('beach-filter-input').value;
+		// Assign event listeners to marker
+		dogBeachMarker.googleMarker.addListener('click', dogBeachMarker.clickMarker);
 
-        self.dogBeaches().forEach(function(dogBeachMarker) {
-            // if title contains filterString value, then show it, else hide it
-            if (dogBeachMarker.googleMarker.title.toLowerCase().indexOf(filterString) > -1 ) {
-                // show the marker on the map
-                dogBeachMarker.googleMarker.setMap(map);
-                // show the marker in the list
-                dogBeachMarker.matchesFilter(true);
-            } else {
-                // hide the marker from the map
-                dogBeachMarker.googleMarker.setMap(null);
-                // hide the marker from the list
-                dogBeachMarker.matchesFilter(null);
-            }
-        });
-
-    };
+		// Add DogBeachMarker object to the array
+		self.dogBeaches.push( dogBeachMarker );
+		
+	});
 
 
+	// Returns a function that will animate the marker and load the infoWindow
+	// dogBeachMarker is in the closure (Reviewer: please check if this is a correct statement)
+	function returnClickMarkerFunction(dogBeachMarker) {
+
+		return function() {
+            // Search flickr and grab an image
+			var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
+		+ dogBeachMarker.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
+
+			$.ajax({
+				url : flickURL,
+				dataType : 'jsonp'
+			}).done(function(data) {
+
+				// Animate marker by bouncing it
+				animateMarker(dogBeachMarker.googleMarker);
+				
+				// Open infoWindow  with HTML formatted data from flickr and the dogbeachmaker
+				infoWindow.setContent(generateInfoWindowHTML(data, dogBeachMarker));
+				infoWindow.open(map, dogBeachMarker.googleMarker);
+
+			}).fail(function() {
+				alert('fail flickr api');
+			});
+		};
+
+	}
+
+	// Generate HTML that is displayed in the infoWindow
+	// Consists of title, off leash info and picture
+	function generateInfoWindowHTML(flickrData, dogBeachMarker) {
+
+		var contentHTML = '<h3>' + dogBeachMarker.googleMarker.title + '</h3>';
+		contentHTML = contentHTML + '<div><strong>Off Leash Times</strong></div>';
+		contentHTML = contentHTML + '<div class="off-leash-description">' + dogBeachMarker.offLeashTimes + '</div>';
+		var photoList = flickrData.photos.photo;
+		for (var i = 0; i < photoList.length; i++) {
+			// construct URL as per https://www.flickr.com/services/api/misc.urls.html 
+			var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
+			+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
+			contentHTML = contentHTML + '<img src="' + imgURL + '" class="info-window-image">';
+		}
+		return contentHTML;
+
+	}
+
+
+	// Animate marker
+	function animateMarker(googleMarker) {
+
+		googleMarker.setAnimation(google.maps.Animation.BOUNCE);
+		window.setTimeout(function() {
+			googleMarker.setAnimation(null);
+		}, 3500);
+
+	}
+
+	// Declare query variable to hold contents of search bar 
+	self.query = ko.observable('');
+
+     // Filtered dog beaches array - uses a computed observable that looks the 'query' value
+    self.dogBeachesFiltered = ko.computed(function() {
+        // grab the query value
+        var filter = self.query().toLowerCase();
+
+        if (!filter) {
+            // query is blank, return all the dogBeaches
+            return this.dogBeaches();
+        } else {
+            // query equals something, filter the dogBeaches using the arrayFilter utility function
+            return ko.utils.arrayFilter(this.dogBeaches(), function(item) {
+
+                // if filter string is in the dogBeach title, then add to filtered array
+                return item.googleMarker.title.toLowerCase().indexOf(filter) !== -1;
+               
+            });
+        }
+    }, self);
 
 };
