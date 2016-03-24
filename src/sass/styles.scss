@@ -54,16 +54,24 @@ html, body {
 }
 
 .nav-toggle {
-	text-align: right;
-	flex-grow: 1;
-	padding: 12px 10px;
-	color: white;
-	cursor: pointer;
-	max-width: 80px;
 
-	&:before {
-		content: '\2630  ';
+	@media screen and (max-width: $breakpoint-medium) {
+		text-align: right;
+		flex-grow: 1;
+		padding: 12px 10px;
+		color: white;
+		cursor: pointer;
+		max-width: 80px;
+
+		&:before {
+			content: '\2630  ';
+		}
 	}
+
+	@media screen and (min-width: $breakpoint-medium) {
+		display: none;
+	}
+	
 }
 
 

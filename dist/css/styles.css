@@ -40,17 +40,22 @@ html, body {
     padding: 10px 10px 5px;
     margin: 0; }
 
-.nav-toggle {
-  text-align: right;
-  -webkit-flex-grow: 1;
-      -ms-flex-positive: 1;
-          flex-grow: 1;
-  padding: 12px 10px;
-  color: white;
-  cursor: pointer;
-  max-width: 80px; }
-  .nav-toggle:before {
-    content: '\2630  '; }
+@media screen and (max-width: 768px) {
+  .nav-toggle {
+    text-align: right;
+    -webkit-flex-grow: 1;
+        -ms-flex-positive: 1;
+            flex-grow: 1;
+    padding: 12px 10px;
+    color: white;
+    cursor: pointer;
+    max-width: 80px; }
+    .nav-toggle:before {
+      content: '\2630  '; } }
+
+@media screen and (min-width: 768px) {
+  .nav-toggle {
+    display: none; } }
 
 .nav-container {
   position: absolute;
