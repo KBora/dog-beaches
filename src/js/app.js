@@ -112,16 +112,20 @@ var ViewModel = function() {
 	function generateInfoWindowHTML(flickrData, dogBeachMarker) {
 
 		var contentHTML = '<h3>' + dogBeachMarker.googleMarker.title + '</h3>';
-		contentHTML = contentHTML + '<div><strong>Off Leash Times</strong></div>';
+		contentHTML = contentHTML + '<div class="infoHeading">Off Leash Times</div>';
 		contentHTML = contentHTML + '<div class="off-leash-description">' + dogBeachMarker.offLeashTimes + '</div>';
-		var photoList = flickrData.photos.photo;
+        contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div>';
+        var photoList = flickrData.photos.photo;
 		for (var i = 0; i < photoList.length; i++) {
 			// construct URL as per https://www.flickr.com/services/api/misc.urls.html 
 			var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
 			+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
-			contentHTML = contentHTML + '<img src="' + imgURL + '" class="info-window-image">';
+			contentHTML = contentHTML + '<img src="' + imgURL + '" class="info-window-image">' ;
 		}
-		return contentHTML;
+
+        var url = '<div class="infoHeading">Council website</div><a href="' + dogBeachMarker.website + '">' + dogBeachMarker.website + '</a>';
+        
+		return contentHTML + url;
 
 	}
 
