@@ -13,6 +13,10 @@ html, body {
 
 #map {
 	height: 100%;
+
+	.google-maps-error {
+		margin: 25%;
+	}
 }
 
 .map-container {
