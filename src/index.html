@@ -56,13 +56,23 @@
 			.nav-container  {
 				width: 100%;
 				position: absolute;
-				z-index: 3;
+				z-index: 2;
 				top: 40px;
 				right: 0;
 				padding: 0;
 				background-color: rgba(255, 255, 255, 0.95);
+				max-height: 500px;
+    			overflow-y: scroll;
+				transform: translate(0,-500px);
+				transition: transform 0.45s ease-in;
+
 			}
 			
+			.nav-container.open {
+				transform: translate(0,0);	
+				transition: transform 0.45s ease-out;	
+			}
+
 			.nav-container.desktop{
 				width: 250px;
 				position: absolute;
@@ -150,7 +160,7 @@
 
 		<div class="nav-header">
 			<div class="nav-heading"><h1>Dog Beaches in Sydney</h1></div>
-			<div class="nav-toggle">SHOW LIST</div>
+			<div class="nav-toggle" id="show-list">SHOW LIST</div>
 		</div>
 		<div class="nav-container">
 			
@@ -175,7 +185,13 @@
 				});
 
 				// Run Knockout			
-				ko.applyBindings(new ViewModel);				
+				ko.applyBindings(new ViewModel);	
+
+				// show list toggle
+				$('#show-list').click( function() {
+					$('.nav-container').toggleClass('open')
+				});	
+
 			}
 		</script>
 
