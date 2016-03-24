@@ -85,56 +85,79 @@ var ViewModel = function() {
 
 		return function() {
 
-
-            // Search flickr and grab an image
-			var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
-		+ dogBeachMarker.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
-
-			$.ajax({
-				url : flickURL,
-				dataType : 'jsonp'
-			}).done(function(data) {
-
-			// Hide the list if visible
+			// Hide the nav list if visible, so that map and infowindow can be seen
+			// Only valid for smaller viewports since listVisible cannot be toggled on desktops due to hidden toggle button
 			if (self.listVisible()) {
 				self.toggleList();
 			}
 
-				// Animate marker by bouncing it
-				animateMarker(dogBeachMarker.googleMarker);
-				
-				// Open infoWindow  with HTML formatted data from flickr and the dogbeachmaker
-				infoWindow.setContent(generateInfoWindowHTML(data, dogBeachMarker));
-				infoWindow.open(map, dogBeachMarker.googleMarker);
+			// Animate marker by bouncing it
+			animateMarker(dogBeachMarker.googleMarker);
+			
+			// Open infoWindow  with HTML formatted data from flickr and the dogbeachmaker
+			infoWindow.setContent(generateInfoWindowHTML(dogBeachMarker));
+			infoWindow.open(map, dogBeachMarker.googleMarker);
 
-			}).fail(function() {
-				alert('fail flickr api');
-			});
+			// Update infowindow with flickr images
+			loadFlickrImages(dogBeachMarker);
+
 		};
 
 	}
 
 	// Generate HTML that is displayed in the infoWindow
 	// Consists of title, off leash info and picture
-	function generateInfoWindowHTML(flickrData, dogBeachMarker) {
+	function generateInfoWindowHTML(dogBeachMarker) {
 
 		var contentHTML = '<h3>' + dogBeachMarker.googleMarker.title + '</h3>';
 		contentHTML = contentHTML + '<div class="infoHeading">Off Leash Times</div>';
 		contentHTML = contentHTML + '<div class="off-leash-description">' + dogBeachMarker.offLeashTimes + '</div>';
-			contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div>';
-			var photoList = flickrData.photos.photo;
-		for (var i = 0; i < photoList.length; i++) {
-			// construct URL as per https://www.flickr.com/services/api/misc.urls.html 
-			var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
-			+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
-			contentHTML = contentHTML + '<img src="' + imgURL + '" class="info-window-image">' ;
-		}
+		contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div><div class="flickr-images">Loading ...</div>';
+		
 
 		var url = '<div class="infoHeading">Council website</div><a href="' + dogBeachMarker.website + '">' + dogBeachMarker.website + '</a>';
 
 		return contentHTML + url;
 
 	}
+
+	function loadFlickrImages( dogBeachMarker) {
+		// Search flickr and grab an image
+			var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
+		+ dogBeachMarker.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
+
+			var flickrHTML = '';
+
+			$.ajax({
+				url : flickURL,
+				dataType : 'jsonp'
+			}).done(function(data) {
+
+				var photoList = data.photos.photo;
+				for (var i = 0; i < photoList.length; i++) {
+					// construct URL as per https://www.flickr.com/services/api/misc.urls.html 
+					var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
+					+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
+					flickrHTML = '<img src="' + imgURL + '" class="info-window-image">' ;
+								$('.flickr-images').html(flickrHTML);
+				}
+
+			}).fail(function() {
+
+				flickrHTML = 'Cannot load Flickr images at this time.';
+
+			}).complete(function() {
+
+				// Loading the flick images into the info window div
+				// Perhaps this can be bound someway in knockout?
+				$('.flickr-images').html(flickrHTML);
+
+			});
+
+
+
+	}
+
 
 
 

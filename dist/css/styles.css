@@ -119,3 +119,6 @@ html, body {
 
 .info-window-image {
   margin-top: 5px; }
+
+.flickr-images {
+  min-height: 175px; }
