@@ -49,6 +49,8 @@
 				flex-grow: 1;
 				padding: 12px 10px;
 				color: white;
+				cursor: pointer;
+				max-width: 80px;
 			}
 
 			.nav-toggle:before { content:'\2630  '; }
@@ -160,9 +162,9 @@
 
 		<div class="nav-header">
 			<div class="nav-heading"><h1>Dog Beaches in Sydney</h1></div>
-			<div class="nav-toggle" id="show-list">SHOW LIST</div>
+			<div class="nav-toggle" id="show-list" data-bind="text: listToggleButtonText, click: toggleList"></div>
 		</div>
-		<div class="nav-container">
+		<div class="nav-container" data-bind="css: {'open': listVisible}">
 			
 			<div class="nav-search">
 				<input name="beach-filter-input" id="beach-filter-input" class="rounded" type="search" placeholder="Filter by name" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
@@ -188,9 +190,9 @@
 				ko.applyBindings(new ViewModel);	
 
 				// show list toggle
-				$('#show-list').click( function() {
-					$('.nav-container').toggleClass('open')
-				});	
+				// $('#show-list').click( function() {
+				// 	$('.nav-container').toggleClass('open')
+				// });	
 
 			}
 		</script>

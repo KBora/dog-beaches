@@ -162,4 +162,17 @@ var ViewModel = function() {
         }
     }, self);
 
+    // Declare observable to hold status of list view
+    self.listVisible = ko.observable(false);
+    
+    
+    self.listToggleButtonText = ko.computed( function() {
+        return self.listVisible() ? 'HIDE LIST' : 'SHOW LIST';
+    }, self);
+
+    self.toggleList = function() {
+        self.listVisible(!self.listVisible());
+    };
+
+    
 };
