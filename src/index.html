@@ -19,7 +19,7 @@
 			}
 
 			.nav-header {
-				background-color: rgba(0, 63, 156, 0.95);
+				background-color: #E65100;
 				width: 100%;
 				position: absolute;
 				z-index: 3;
@@ -47,9 +47,12 @@
 			.nav-toggle {
 				text-align: right;
 				flex-grow: 1;
-				padding: 10px;
-
+				padding: 12px 10px;
+				color: white;
 			}
+
+			.nav-toggle:before { content:'\2630  '; }
+			
 			.nav-container  {
 				width: 100%;
 				position: absolute;
@@ -57,10 +60,8 @@
 				top: 40px;
 				right: 0;
 				padding: 0;
-				height: 100%;
 				background-color: rgba(255, 255, 255, 0.95);
 			}
-
 			
 			.nav-container.desktop{
 				width: 250px;
@@ -78,9 +79,12 @@
 				height: 100%;
 			}
 
-
+			.nav-search {
+				padding: 10px 10px 0 10px;
+			}
+			
 			.nav-search input {
-				width: 160px;
+				width: 100%;
 			}
 
 			input.rounded {
@@ -107,13 +111,13 @@
 				list-style-type: none;
 				list-style-position: outside;
 				padding: 0;
+				margin: 10px 0 0 0;
 			}
 
 			.nav-container li {
 				cursor: pointer;
 				padding: 10px;
 				border-bottom: 1px solid #eee;
-				background: white;
 			}
 
 			.nav-container li:first-child {
@@ -146,12 +150,12 @@
 
 		<div class="nav-header">
 			<div class="nav-heading"><h1>Dog Beaches in Sydney</h1></div>
-			<div class="nav-toggle">X</div>
+			<div class="nav-toggle">SHOW LIST</div>
 		</div>
 		<div class="nav-container">
 			
 			<div class="nav-search">
-				<input name="beach-filter-input" id="beach-filter-input" class="rounded" type="search"  data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
+				<input name="beach-filter-input" id="beach-filter-input" class="rounded" type="search" placeholder="Filter by name" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
 			</div>
 			<div class="nav-list">
 				<ul id="beach-list" data-bind="foreach: dogBeachesFiltered">
