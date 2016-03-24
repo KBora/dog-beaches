@@ -57,7 +57,8 @@ var ViewModel = function() {
 
 	// Create one infoWindow that will display content and images for each marker
 	var infoWindow = new google.maps.InfoWindow({
-		content : 'default info window text'
+		content : 'default info window text',
+        maxWidth : 350
 	});
 
 	// Create markers from initial data and add to array
@@ -82,6 +83,7 @@ var ViewModel = function() {
 	function returnClickMarkerFunction(dogBeachMarker) {
 
 		return function() {
+            // Search flickr and grab an image
 			var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
 		+ dogBeachMarker.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
 
@@ -109,14 +111,14 @@ var ViewModel = function() {
 	function generateInfoWindowHTML(flickrData, dogBeachMarker) {
 
 		var contentHTML = '<h3>' + dogBeachMarker.googleMarker.title + '</h3>';
-		contentHTML = contentHTML + '<div>Off Leash Times</div>';
-		contentHTML = contentHTML + '<div>' + dogBeachMarker.offLeashTimes + '</div>';
+		contentHTML = contentHTML + '<div><strong>Off Leash Times</strong></div>';
+		contentHTML = contentHTML + '<div class="off-leash-description">' + dogBeachMarker.offLeashTimes + '</div>';
 		var photoList = flickrData.photos.photo;
 		for (var i = 0; i < photoList.length; i++) {
 			// construct URL as per https://www.flickr.com/services/api/misc.urls.html 
 			var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
 			+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
-			contentHTML = contentHTML + '<img src="' + imgURL + '">';
+			contentHTML = contentHTML + '<img src="' + imgURL + '" class="info-window-image">';
 		}
 		return contentHTML;
 
