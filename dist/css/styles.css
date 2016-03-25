@@ -130,6 +130,10 @@ html, body {
   margin-top: 5px; }
 
 .flickr-images {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
   min-height: 175px; }
   .flickr-images img {
-    max-height: 175px; }
+    max-height: 175px;
+    margin: auto; }

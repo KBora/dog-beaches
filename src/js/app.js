@@ -98,9 +98,12 @@ var DogBeachInfoWindow = function() {
 	self.offLeashTimes = ko.observable('');
 	self.website = ko.observable('');
 
-	// Create one infoWindow that will display content and images for each marker
+	// The HTML for this is stored in a template in the index.html
+	// The $data object (which is this current object) is passed as the data parameter
+	// This syntax took me while to guess
+
 	var infoWindowHTML = '<div id="info-window"' +
-                'data-bind="template: { name: \'info-window-template\', data: $data}">' + // this $data syntax took me while to guess
+                'data-bind="template: { name: \'info-window-template\', data: $data}">' + 
                 '</div>';
 
 	self.infoWindow = new google.maps.InfoWindow({
@@ -109,10 +112,9 @@ var DogBeachInfoWindow = function() {
 	});
 	var isInfoWindowLoaded = false;
 
-	/*
-	 * When the info window opens, bind it to Knockout.
-	 * Only do this once.
-	 */
+	
+	// When the info window opens, bind it to Knockout.
+	// Only do this once.
 	google.maps.event.addListener(self.infoWindow, 'domready', function () {
 		if (!isInfoWindowLoaded) {
 			ko.applyBindings(self, $("#info-window")[0]);
@@ -129,7 +131,7 @@ var ViewModel = function() {
 	// Declare array that will hold all the markers
 	self.dogBeaches = ko.observableArray([]);
 
-	// Create DogBeachInfoWindow
+	// Create DogBeachInfoWindow object
 	self.dogBeachInfoWindow = new DogBeachInfoWindow();
 
 	// Create markers from initial data and add to array
@@ -148,7 +150,7 @@ var ViewModel = function() {
 	});
 
 
-	// Returns a function that will animate the marker and load the infoWindow
+	// Returns a function that will animate the marker and open/populate the infoWindow
 	function returnClickMarkerFunction(dogBeachMarker, dogBeachInfoWindow) {
 
 		return function() {
@@ -172,25 +174,24 @@ var ViewModel = function() {
 			self.dogBeachInfoWindow.offLeashTimes(dogBeachMarker.offLeashTimes);
 			// Website
 			self.dogBeachInfoWindow.website(dogBeachMarker.website);
-
-
-			// Update infowindow with flickr images
+			// Image
 			loadFlickrImages(dogBeachMarker, dogBeachInfoWindow);
 
 		};
 
 	}
 
-
+	// Looks up the Flickr API to retrieve an image based on the title of the marker
+	// Saves the result in the dogBeachInfoWindow model
 	function loadFlickrImages( dogBeachMarker, dogBeachInfoWindow) {
-		// Search flickr and grab an image
-		// Doing this after loading the InfoWindow so that user gets a response straigh away
-		// and only waits for the Flickr image to load up
-
+		// Search flickr for one image
 		var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
 		+ dogBeachMarker.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
 
 		var imgURL = '';
+
+		// Set a loading image in the infoWindow 
+		self.dogBeachInfoWindow.flickrImgURL('img/running-dog-grey.gif');
 
 		$.ajax({
 			url : flickURL,
@@ -205,7 +206,7 @@ var ViewModel = function() {
 				+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
 			}
 
-		}).error(function() {
+		}).fail(function() {
 
 			dogBeachInfoWindow.apiErrorMessage('Cannot load Flickr images at this time.');
 
@@ -230,7 +231,9 @@ var ViewModel = function() {
 	// Declare query variable to hold contents of search bar 
 	self.query = ko.observable('');
 
-	// Filtered dog beaches array - uses a computed observable that looks the 'query' value
+
+	// Filters the dog beaches array
+	// Implemented using a computed observable that looks the 'query' value
 	self.dogBeachesFiltered = ko.computed(function() {
 		// grab the query value
 		var filter = self.query().toLowerCase();
@@ -247,14 +250,17 @@ var ViewModel = function() {
 		// }
 	}, self);
 
-	// Declare observable to hold status of list view
+
+	// Visibility of the navigation list section
 	self.listVisible = ko.observable(false);
 
 
+	// Determine button text
 	self.listToggleButtonText = ko.computed( function() {
 		return self.listVisible() ? 'HIDE LIST' : 'SHOW LIST';
 	}, self);
 
+	// Toggle visiblity of the navigation list section
 	self.toggleList = function() {
 		self.listVisible(!self.listVisible());
 	};

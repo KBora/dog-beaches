@@ -175,9 +175,12 @@ html, body {
 }
 
 .flickr-images  {
+	display: flex;
+	min-height: 175px;
+
 	img {
 		max-height: 175px;
+		margin: auto;
 	}
-	min-height: 175px;
 }
 

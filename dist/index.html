@@ -36,7 +36,10 @@
 			<div class="infoHeading">Off Leash Times</div>
 			<div class="off-leash-description" data-bind="text: offLeashTimes"></div>
 			<div class="infoHeading">Flickr Image</div>
-			<div class="flickr-images"><img data-bind="attr: { src: flickrImgURL }" class="info-window-image"></div>
+			<div class="flickr-images">
+				<img data-bind="attr: { src: flickrImgURL }" class="info-window-image">
+				<div class="flickr-api-error" data-bind="text: apiErrorMessage"></div>
+			</div>
 			<div class="infoHeading">Council website</div>
 				<a data-bind="attr: { href: website }, text: website"></a>
 			</div>
