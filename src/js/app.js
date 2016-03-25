@@ -189,20 +189,16 @@ var ViewModel = function() {
 		// grab the query value
 		var filter = self.query().toLowerCase();
 
-		if (!filter) {
-		// query is blank, return all the dogBeaches
-			return this.dogBeaches();
-		} else {
-			// query equals something, filter the dogBeaches using the arrayFilter utility function
-			return ko.utils.arrayFilter(this.dogBeaches(), function(item) {
+		//filter the dogBeaches using the arrayFilter utility function
+		return ko.utils.arrayFilter(this.dogBeaches(), function(item) {
+			// if filter string is in the dogBeach title, then add to filtered array
+			// if filter string is blank (default state) then this should return all the items
+			var filterMatch = item.googleMarker.title.toLowerCase().indexOf(filter) !== -1;
+			item.googleMarker.setVisible(filterMatch);
+			return filterMatch;
+		});
 
-				// if filter string is in the dogBeach title, then add to filtered array
-				var filterMatch = item.googleMarker.title.toLowerCase().indexOf(filter) !== -1;
-				item.googleMarker.setVisible(filterMatch);
-				return filterMatch;
-			});
-
-		}
+		// }
 	}, self);
 
 	// Declare observable to hold status of list view
