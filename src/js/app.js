@@ -112,7 +112,7 @@ var ViewModel = function() {
 		var contentHTML = '<h3>' + dogBeachMarker.googleMarker.title + '</h3>';
 		contentHTML = contentHTML + '<div class="infoHeading">Off Leash Times</div>';
 		contentHTML = contentHTML + '<div class="off-leash-description">' + dogBeachMarker.offLeashTimes + '</div>';
-		contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div><div class="flickr-images">Loading ...</div>';
+		contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div><div class="flickr-images"><img src="img/running-dog-grey.gif"><br>Loading ...</div>';
 		
 		var url = '<div class="infoHeading">Council website</div><a href="' + dogBeachMarker.website + '">' + dogBeachMarker.website + '</a>';
 
@@ -141,7 +141,7 @@ var ViewModel = function() {
 								$('.flickr-images').html(flickrHTML);
 				}
 
-			}).fail(function() {
+			}).error(function() {
 
 				flickrHTML = 'Cannot load Flickr images at this time.';
 
