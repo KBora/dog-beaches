@@ -36,7 +36,7 @@ gulp.task('copy-css', function() {
 
 gulp.task('copy-js', function() {
 	gulp.src('./src/js/*.js' )
-		.pipe(uglify())
+	//	.pipe(uglify())
 		.pipe(gulp.dest('./dist/js'));
 });
 

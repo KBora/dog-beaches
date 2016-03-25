@@ -90,10 +90,30 @@ var ViewModel = function() {
 	// Declare array that will hold all the markers
 	self.dogBeaches = ko.observableArray([]);
 
+
+	// InfoWindow Observables
+	self.selectedMarkerTitle = ko.observable('');
+
+
 	// Create one infoWindow that will display content and images for each marker
-	var infoWindow = new google.maps.InfoWindow({
-		content : 'default info window text',
+	var infoWindowHTML = '<div id="info-window"' +
+                'data-bind="template: { name: \'info-window-template\', data: selectedMarkerTitle }">' +
+                '</div>';
+
+	self.infoWindow = new google.maps.InfoWindow({
+		content : infoWindowHTML,
 		maxWidth : 350
+	});
+	var isInfoWindowLoaded = false;
+	/*
+	 * When the info window opens, bind it to Knockout.
+	 * Only do this once.
+	 */
+	google.maps.event.addListener(self.infoWindow, 'domready', function () {
+		if (!isInfoWindowLoaded) {
+			ko.applyBindings(self, $("#info-window")[0]);
+			isInfoWindowLoaded = true;
+		}
 	});
 
 	// Create markers from initial data and add to array
@@ -112,7 +132,6 @@ var ViewModel = function() {
 		
 	});
 
-
 	// Returns a function that will animate the marker and load the infoWindow
 	// dogBeachMarker is in the closure (Reviewer: please check if this is a correct statement)
 	function returnClickMarkerFunction(dogBeachMarker) {
@@ -129,11 +148,15 @@ var ViewModel = function() {
 			animateMarker(dogBeachMarker.googleMarker);
 			
 			// Open infoWindow  with HTML formatted data from flickr and the dogbeachmaker
-			infoWindow.setContent(generateInfoWindowHTML(dogBeachMarker));
-			infoWindow.open(map, dogBeachMarker.googleMarker);
+			//infoWindow.setContent(generateInfoWindowHTML(dogBeachMarker));
+			self.infoWindow.open(map, dogBeachMarker.googleMarker);
+
+
+			// Get and apply name
+			setSelectedMarkerTitle(dogBeachMarker.googleMarker.title);
 
 			// Update infowindow with flickr images
-			loadFlickrImages(dogBeachMarker);
+			//loadFlickrImages(dogBeachMarker);
 
 		};
 
@@ -234,5 +257,8 @@ var ViewModel = function() {
 		self.listVisible(!self.listVisible());
 	};
 
+	 function setSelectedMarkerTitle(name) {
+        self.selectedMarkerTitle(name);
+    }
 
 };
