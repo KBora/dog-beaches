@@ -82,22 +82,17 @@ var DogBeachMarker = function(data) {
 
 };
 
-
-var ViewModel = function() {
+/* Lone info window */
+var DogBeachInfoWindow = function() {
 
 	var self = this;
 
-	// Declare array that will hold all the markers
-	self.dogBeaches = ko.observableArray([]);
-
-
-	// InfoWindow Observables
-	self.selectedMarkerTitle = ko.observable('');
+	self.title = ko.observable('');
 
 
 	// Create one infoWindow that will display content and images for each marker
 	var infoWindowHTML = '<div id="info-window"' +
-                'data-bind="template: { name: \'info-window-template\', data: selectedMarkerTitle }">' +
+                'data-bind="template: { name: \'info-window-template\', data: title }">' +
                 '</div>';
 
 	self.infoWindow = new google.maps.InfoWindow({
@@ -116,6 +111,16 @@ var ViewModel = function() {
 		}
 	});
 
+};
+
+var ViewModel = function() {
+
+	var self = this;
+
+	// Declare array that will hold all the markers
+	self.dogBeaches = ko.observableArray([]);
+
+
 	// Create markers from initial data and add to array
 	dogBeachInitialData.forEach(function(data) {
 
@@ -131,6 +136,9 @@ var ViewModel = function() {
 		self.dogBeaches.push( dogBeachMarker );
 		
 	});
+
+	// Create DogBeachInfoWindow
+	self.dogBeachInfoWindow = new DogBeachInfoWindow();
 
 	// Returns a function that will animate the marker and load the infoWindow
 	// dogBeachMarker is in the closure (Reviewer: please check if this is a correct statement)
@@ -149,11 +157,11 @@ var ViewModel = function() {
 			
 			// Open infoWindow  with HTML formatted data from flickr and the dogbeachmaker
 			//infoWindow.setContent(generateInfoWindowHTML(dogBeachMarker));
-			self.infoWindow.open(map, dogBeachMarker.googleMarker);
+			self.dogBeachInfoWindow.infoWindow.open(map, dogBeachMarker.googleMarker);
 
 
 			// Get and apply name
-			setSelectedMarkerTitle(dogBeachMarker.googleMarker.title);
+			self.dogBeachInfoWindow.title(dogBeachMarker.googleMarker.title);
 
 			// Update infowindow with flickr images
 			//loadFlickrImages(dogBeachMarker);
@@ -257,8 +265,5 @@ var ViewModel = function() {
 		self.listVisible(!self.listVisible());
 	};
 
-	 function setSelectedMarkerTitle(name) {
-        self.selectedMarkerTitle(name);
-    }
 
 };
