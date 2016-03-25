@@ -65,7 +65,7 @@ var dogBeachInitialData = [{
 
 ];
 
-
+/* One of these is created per dog beach */
 var DogBeachMarker = function(data) {
 
 	var self = this;
@@ -82,17 +82,23 @@ var DogBeachMarker = function(data) {
 
 };
 
-/* Lone info window */
+/* This is used to bind the info window data to the selected marker
+ * Only one of these objects is instantiated, in thew ViewModel
+ * Binding infowindow is a way of avoiding DOM manipulation via jQuery 
+ * https://jsfiddle.net/SittingFox/nr8tr5oo/
+ */
+
 var DogBeachInfoWindow = function() {
 
 	var self = this;
 
 	self.title = ko.observable('');
-
+	self.flickrImgURL  = ko.observable('');
+	self.apiErrorMessage  = ko.observable('');
 
 	// Create one infoWindow that will display content and images for each marker
 	var infoWindowHTML = '<div id="info-window"' +
-                'data-bind="template: { name: \'info-window-template\', data: title }">' +
+                'data-bind="template: { name: \'info-window-template\', data: $data}">' +
                 '</div>';
 
 	self.infoWindow = new google.maps.InfoWindow({
@@ -100,6 +106,7 @@ var DogBeachInfoWindow = function() {
 		maxWidth : 350
 	});
 	var isInfoWindowLoaded = false;
+
 	/*
 	 * When the info window opens, bind it to Knockout.
 	 * Only do this once.
@@ -120,14 +127,15 @@ var ViewModel = function() {
 	// Declare array that will hold all the markers
 	self.dogBeaches = ko.observableArray([]);
 
+	// Create DogBeachInfoWindow
+	self.dogBeachInfoWindow = new DogBeachInfoWindow();
 
 	// Create markers from initial data and add to array
 	dogBeachInitialData.forEach(function(data) {
 
 		var dogBeachMarker = new DogBeachMarker(data);
 
-		// Using the IIFE pattern here (I think)
-		dogBeachMarker.clickMarker = returnClickMarkerFunction(dogBeachMarker);
+		dogBeachMarker.clickMarker = returnClickMarkerFunction(dogBeachMarker, self.dogBeachInfoWindow);
 
 		// Assign event listeners to marker
 		dogBeachMarker.googleMarker.addListener('click', dogBeachMarker.clickMarker);
@@ -137,12 +145,9 @@ var ViewModel = function() {
 		
 	});
 
-	// Create DogBeachInfoWindow
-	self.dogBeachInfoWindow = new DogBeachInfoWindow();
 
 	// Returns a function that will animate the marker and load the infoWindow
-	// dogBeachMarker is in the closure (Reviewer: please check if this is a correct statement)
-	function returnClickMarkerFunction(dogBeachMarker) {
+	function returnClickMarkerFunction(dogBeachMarker, dogBeachInfoWindow) {
 
 		return function() {
 
@@ -155,71 +160,54 @@ var ViewModel = function() {
 			// Animate marker by bouncing it
 			animateMarker(dogBeachMarker.googleMarker);
 			
-			// Open infoWindow  with HTML formatted data from flickr and the dogbeachmaker
-			//infoWindow.setContent(generateInfoWindowHTML(dogBeachMarker));
+			// Open InfoWindow
 			self.dogBeachInfoWindow.infoWindow.open(map, dogBeachMarker.googleMarker);
 
-
-			// Get and apply name
+			// Set the observables in the info window
+			// Title
 			self.dogBeachInfoWindow.title(dogBeachMarker.googleMarker.title);
 
+
 			// Update infowindow with flickr images
-			//loadFlickrImages(dogBeachMarker);
+			loadFlickrImages(dogBeachMarker, dogBeachInfoWindow);
 
 		};
 
 	}
 
-	// Generate HTML that is displayed in the infoWindow
-	// Consists of title, off leash info and picture
-	function generateInfoWindowHTML(dogBeachMarker) {
 
-		var contentHTML = '<h3>' + dogBeachMarker.googleMarker.title + '</h3>';
-		contentHTML = contentHTML + '<div class="infoHeading">Off Leash Times</div>';
-		contentHTML = contentHTML + '<div class="off-leash-description">' + dogBeachMarker.offLeashTimes + '</div>';
-		contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div><div class="flickr-images"><img src="img/running-dog-grey.gif"><br>Loading ...</div>';
-		
-		var url = '<div class="infoHeading">Council website</div><a href="' + dogBeachMarker.website + '">' + dogBeachMarker.website + '</a>';
-
-		return contentHTML + url;
-
-	}
-
-	function loadFlickrImages( dogBeachMarker) {
+	function loadFlickrImages( dogBeachMarker, dogBeachInfoWindow) {
 		// Search flickr and grab an image
 		// Doing this after loading the InfoWindow so that user gets a response straigh away
 		// and only waits for the Flickr image to load up
 
-			var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
+		var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
 		+ dogBeachMarker.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
 
-			var flickrHTML = '';
+		var imgURL = '';
 
-			$.ajax({
-				url : flickURL,
-				dataType : 'jsonp'
-			}).done(function(data) {
+		$.ajax({
+			url : flickURL,
+			dataType : 'jsonp'
+		}).done(function(data) {
 
-				var photoList = data.photos.photo;
-				for (var i = 0; i < photoList.length; i++) {
-					// construct URL as per https://www.flickr.com/services/api/misc.urls.html 
-					var imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
-					+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
-					flickrHTML = '<img src="' + imgURL + '" class="info-window-image">';
-						$('.flickr-images').html(flickrHTML);
-				}
+			var photoList = data.photos.photo;
+			
+			for (var i = 0; i < photoList.length; i++) {
+				// construct URL as per https://www.flickr.com/services/api/misc.urls.html 
+				imgURL = 'https://farm' + photoList[i].farm + '.staticflickr.com/'
+				+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
+			}
 
-			}).error(function() {
+		}).error(function() {
 
-				flickrHTML = 'Cannot load Flickr images at this time.';
+			dogBeachInfoWindow.apiErrorMessage('Cannot load Flickr images at this time.');
 
-			}).complete(function() {
+		}).complete(function() {
 
-				// Loading the flick images into the info window div
-				// Perhaps this can be bound someway in knockout?
-				$('.flickr-images').html(flickrHTML);
+			dogBeachInfoWindow.flickrImgURL(imgURL);
 
-			});
+		});
 	}
 
 

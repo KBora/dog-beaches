@@ -32,7 +32,8 @@
 		
 		<!-- Knockout template -->
 		<script type="text/html" id="info-window-template">
-			<h3 data-bind="text: $data"></h3>
+			<h3 data-bind="text: title"></h3>
+			<div class="flickr-images"><img data-bind="attr: { src: flickrImgURL }" class="info-window-image"></div>
 		</script>
 
 <!-- 			<div class="infoHeading">Off Leash Times</div>
