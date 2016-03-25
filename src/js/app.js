@@ -135,6 +135,9 @@ var ViewModel = function() {
 
 	function loadFlickrImages( dogBeachMarker) {
 		// Search flickr and grab an image
+		// Doing this after loading the InfoWindow so that user gets a response straigh away
+		// and only waits for the Flickr image to load up
+
 			var flickURL =  'https://api.flickr.com/services/rest/?method=flickr.photos.search&api_key=eebfb336fe500c5469321951f38d7853&tags=' 
 		+ dogBeachMarker.googleMarker.title + '&per_page=1&format=json&jsoncallback=?';
 
