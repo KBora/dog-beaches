@@ -13,15 +13,20 @@ html, body {
 
 #map {
 	height: 100%;
+	display: flex;
 
-	.google-maps-error {
-		margin: 25%;
+	.google-maps-message {
+		width: 200px;
+		height: 200px;
+		margin: auto;
+		text-align: center;
 	}
 }
 
 .map-container {
 	width: 100%;
 	height: 100%;
+	
 }
 
 .nav-header {

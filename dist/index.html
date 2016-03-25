@@ -11,7 +11,7 @@
 	<body>
 
 		<div class="map-container">
-			<div id="map"><div class="google-maps-error">If you are reading message, it means Google Maps cannot be loaded. Please check your internet connection and try again.</div></div>
+			<div id="map"><div class="google-maps-message"><img src="img/running-dog-grey.gif"><div id="google-maps-message">Loading ... </div></div></div>
 		</div>
 
 		<div class="nav-header">
@@ -32,6 +32,16 @@
 		
 
 		<script>
+
+			// Error handler...
+			setTimeout(function(){ 
+				if (typeof map === 'undefined' ) {
+					$('#google-maps-message').html('Unable to load Google maps. Please check if you are connected to the internet');
+					$('.nav-container').hide();
+					$('.nav-header').hide();
+				}
+			}, 4000);
+
 			var map;
 
 			function initMap() {
@@ -41,9 +51,10 @@
 				});
 
 				// Run Knockout			
-				ko.applyBindings(new ViewModel);	
+				ko.applyBindings(new ViewModel);
 
 			}
+			
 		</script>
 
 		<script src="js/lib/knockout-3.4.0.js"></script>

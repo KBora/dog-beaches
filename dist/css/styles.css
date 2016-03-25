@@ -5,9 +5,15 @@ html, body {
   font: 85% Helvetica Neue, sans-serif; }
 
 #map {
-  height: 100%; }
-  #map .google-maps-error {
-    margin: 25%; }
+  height: 100%;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex; }
+  #map .google-maps-message {
+    width: 200px;
+    height: 200px;
+    margin: auto;
+    text-align: center; }
 
 .map-container {
   width: 100%;

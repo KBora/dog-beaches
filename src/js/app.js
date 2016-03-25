@@ -114,7 +114,6 @@ var ViewModel = function() {
 		contentHTML = contentHTML + '<div class="off-leash-description">' + dogBeachMarker.offLeashTimes + '</div>';
 		contentHTML = contentHTML + '<div class="infoHeading">Flickr Image</div><div class="flickr-images">Loading ...</div>';
 		
-
 		var url = '<div class="infoHeading">Council website</div><a href="' + dogBeachMarker.website + '">' + dogBeachMarker.website + '</a>';
 
 		return contentHTML + url;
@@ -153,12 +152,7 @@ var ViewModel = function() {
 				$('.flickr-images').html(flickrHTML);
 
 			});
-
-
-
 	}
-
-
 
 
 	// Animate marker

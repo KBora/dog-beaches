@@ -5,7 +5,7 @@ var autoprefixer = require('gulp-autoprefixer');
 
 
 gulp.task('default', [
-	'copy-html','copy-css', 'copy-js', 'copy-js-lib'], function() {
+	'copy-html','copy-css', 'copy-js', 'copy-js-lib', 'copy-img'], function() {
 	// place code for your default task here
 
 });
@@ -34,4 +34,9 @@ gulp.task('copy-js', function() {
 gulp.task('copy-js-lib', function() {
 	gulp.src('./src/js/lib/*.js' )
 		.pipe(gulp.dest('./dist/js/lib'));
+});
+
+gulp.task('copy-img', function() {
+	gulp.src('./src/img/*' )
+		.pipe(gulp.dest('./dist/img'));
 });
