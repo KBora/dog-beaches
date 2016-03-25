@@ -2,13 +2,22 @@ var gulp = require('gulp');
 var uglify = require('gulp-uglify');
 var sass = require('gulp-sass');
 var autoprefixer = require('gulp-autoprefixer');
+var browserSync = require('browser-sync').create();
 
 
-gulp.task('default', [
-	'copy-html','copy-css', 'copy-js', 'copy-js-lib', 'copy-img'], function() {
+
+gulp.task('default', function() {
+	gulp.watch('./src/*.html', ['copy-html']);
+	gulp.watch('./src/sass/*.scss', ['copy-css']);
+	gulp.watch('./src/js/*.js', ['copy-js']);
+	gulp.watch('./src/js/lib/*.js', ['copy-js-lib']);
+	gulp.watch('./src/img/*', ['copy-img']);
 	// place code for your default task here
-
+	browserSync.init({
+		server: './dist'
+	});
 });
+
 
 gulp.task('copy-html', function() {
 	gulp.src('./src/*.html' )
