@@ -264,4 +264,11 @@ var ViewModel = function() {
 	};
 
 
+
 };
+
+var GoogleErrorModel = function() {
+	var self = this;
+	self.errorMessage = ko.observable('Unable to load Google Maps, please try again later');
+};
+

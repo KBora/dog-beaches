@@ -11,23 +11,31 @@
 	<body>
 
 		<div class="map-container">
-			<div id="map"><div class="google-maps-message"><img src="img/running-dog-grey.gif"><div id="google-maps-message">Loading ... </div></div></div>
+			<div id="map">
+				<div class="google-maps-message">
+					<img src="img/running-dog-grey.gif">
+					<div id="google-maps-message" data-bind="text: errorMessage"></div>
+				</div>
+			</div>
 		</div>
 
 		<div class="nav-header">
 			<div class="nav-heading"><h1>Dog Beaches in Sydney</h1></div>
 			<div class="nav-toggle" id="show-list" data-bind="text: listToggleButtonText, click: toggleList"></div>
 		</div>
-		<div class="nav-container" data-bind="css: {'open': listVisible}">
+
+		<div class="nav-container" data-bind="css: {'open': listVisible}">	
 			
 			<div class="nav-search">
 				<input name="beach-filter-input" id="beach-filter-input" class="rounded" type="search" placeholder="Filter by name" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off">
 			</div>
+
 			<div class="nav-list">
 				<ul id="beach-list" data-bind="foreach: dogBeachesFiltered">
 					<li data-bind="text: googleMarker.title, click: clickMarker"></li>
 				</ul>
 			</div>
+
 		</div>
 		
 		<!-- Knockout template -->
@@ -48,15 +56,6 @@
 			
 		<script>
 
-			// Error handler...
-			setTimeout(function(){ 
-				if (typeof map === 'undefined' ) {
-					$('#google-maps-message').html('Unable to load Google maps. Please check if you are connected to the internet');
-					$('.nav-container').hide();
-					$('.nav-header').hide();
-				}
-			}, 4000);
-
 			var map;
 
 			function initMap() {
@@ -70,16 +69,20 @@
 
 			}
 			
+			function handleError() {
+				ko.applyBindings(new GoogleErrorModel, $('.google-maps-message')[0]);
+			}
+
 		</script>
 
 		<script src="js/lib/knockout-3.4.0.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
-		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGSvi6fok_KoX6Tw5C_UjPy3SsVm6ZQg&callback=initMap&region=AU"
-		async defer></script>
-
 
 		<script src="js/app.js"></script>
-	</body>
+		<script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBqGSvi6fok_KoX6Tw5C_UjPy3SsVm6ZQg&callback=initMap&region=AU" onerror="handleError()"></script>
+
+
+			</body>
 
 
 </html>
