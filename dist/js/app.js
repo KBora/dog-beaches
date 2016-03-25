@@ -95,10 +95,12 @@ var DogBeachInfoWindow = function() {
 	self.title = ko.observable('');
 	self.flickrImgURL  = ko.observable('');
 	self.apiErrorMessage  = ko.observable('');
+	self.offLeashTimes = ko.observable('');
+	self.website = ko.observable('');
 
 	// Create one infoWindow that will display content and images for each marker
 	var infoWindowHTML = '<div id="info-window"' +
-                'data-bind="template: { name: \'info-window-template\', data: $data}">' +
+                'data-bind="template: { name: \'info-window-template\', data: $data}">' + // this $data syntax took me while to guess
                 '</div>';
 
 	self.infoWindow = new google.maps.InfoWindow({
@@ -166,6 +168,10 @@ var ViewModel = function() {
 			// Set the observables in the info window
 			// Title
 			self.dogBeachInfoWindow.title(dogBeachMarker.googleMarker.title);
+			// Off Leash Times
+			self.dogBeachInfoWindow.offLeashTimes(dogBeachMarker.offLeashTimes);
+			// Website
+			self.dogBeachInfoWindow.website(dogBeachMarker.website);
 
 
 			// Update infowindow with flickr images

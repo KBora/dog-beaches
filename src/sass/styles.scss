@@ -166,11 +166,18 @@ html, body {
 
 }
 
+.info-window {
+	min-height: 350px;
+}
+
 .info-window-image {
 	margin-top: 5px;
 }
 
-.flickr-images {
+.flickr-images  {
+	img {
+		max-height: 175px;
+	}
 	min-height: 175px;
 }
 
