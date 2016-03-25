@@ -206,13 +206,11 @@ var ViewModel = function() {
 				+ photoList[i].server + '/' + photoList[i].id + '_' + photoList[i].secret + '_m.jpg';
 			}
 
+			dogBeachInfoWindow.flickrImgURL(imgURL);
+
 		}).fail(function() {
 
-			dogBeachInfoWindow.apiErrorMessage('Cannot load Flickr images at this time.');
-
-		}).complete(function() {
-
-			dogBeachInfoWindow.flickrImgURL(imgURL);
+			dogBeachInfoWindow.apiErrorMessage('Unable to load Flickr images ...');
 
 		});
 	}

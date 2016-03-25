@@ -4,7 +4,8 @@ $nav-bar-height: 40px;
 $breakpoint-medium: 768px;
 $desktop-nav-width: 300px;
 
-html, body {
+html, 
+body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -176,11 +177,17 @@ html, body {
 
 .flickr-images  {
 	display: flex;
+	flex-direction: column;
 	min-height: 175px;
 
 	img {
 		max-height: 175px;
 		margin: auto;
+	}
+
+	.flickr-api-error {
+    text-align: center;
+    color: red;
 	}
 }
 
