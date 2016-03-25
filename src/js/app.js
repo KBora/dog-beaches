@@ -28,7 +28,20 @@ var dogBeachInitialData =
         offLeash : true,
         offLeashTimes: 'All times',
         website : 'http://www.warringah.nsw.gov.au/play/flora-and-ritchie-roberts-reserve'
+    },
+    {   title : 'Bonna Point Reserve',
+		    position : {lat: -34.007235, lng: 151.190262},
+		    offLeash : true,
+		    offLeashTimes: 'All times',
+		    website : 'http://www.sutherlandshire.nsw.gov.au/Outdoors/Parks-and-Playgrounds/Parks/Bonna-Point-Reserve-Kurnell'
+    },
+    {   title : 'Bondi to Bronte coastal walk',
+		    position : {lat: -33.895492, lng: 151.274602},
+		    offLeash : false,
+		    offLeashTimes: 'Dogs must be on a leash',
+		    website : 'http://www.waverley.nsw.gov.au/recreation/beaches_and_coast/bondi_to_bronte_coastal_walk'
     }
+
     ];
 
 
