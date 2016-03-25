@@ -197,8 +197,9 @@ var ViewModel = function() {
 			return ko.utils.arrayFilter(this.dogBeaches(), function(item) {
 
 				// if filter string is in the dogBeach title, then add to filtered array
-				return item.googleMarker.title.toLowerCase().indexOf(filter) !== -1;
-			
+				var filterMatch = item.googleMarker.title.toLowerCase().indexOf(filter) !== -1;
+				item.googleMarker.setVisible(filterMatch);
+				return filterMatch;
 			});
 
 		}
